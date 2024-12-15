@@ -8,4 +8,10 @@ urlpatterns = [
     path('blogs/create/', views.blogs_create, name='blogs-create'),
     path('blogs/update/<int:pk>', views.blogs_update, name='blogs_update'),
     path('blogs/delete/<int:pk>', views.blogs_delete, name='blogs_delete'),
+
+    # cbw
+    path('cbw/blogs/', views.BlogAPIView.as_view(), name='cbw-blogs'),
+    # path('cbw/blogs/', views.BlogAPIView.as_view(), name='cbw-blogs'),
+    path('cbw/blogs/<int:pk>/', views.BlogAPIView.as_view(), name='cbw-blogs')
+
 ]
