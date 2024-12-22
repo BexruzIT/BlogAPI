@@ -9,13 +9,19 @@ from blog.serializers import BlogSerializer
 from rest_framework.decorators import api_view
 
 
-class BlogAPIView(APIView):
-    def get(self, request, pk=None):
-        if pk or pk == 0:
-            blog = get_object_or_404(Blog, id=pk)
-            serializer = BlogSerializer(blog)
-            return Response(serializer.data)
+class BlogListCreateAPIView(APIView):
+    def get(self, request):
+        # default
         blogs = Blog.objects.all()
+        # search
+        title = request.query_params.get("title", None)
+        desc = request.query_params.get("title", None)
+
+        if title:
+            blogs = blogs.filter(title__icontains=title)
+        if desc:
+            blogs = blogs.filter(title__icontains=desc)
+
         serializer = BlogSerializer(blogs, many=True)
         return Response(serializer.data)
 
@@ -27,11 +33,12 @@ class BlogAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class BlogDetailAPIView(APIView):
+class BlogRetriveUpdateDeleteAPIView(APIView):
     def get(self, request, pk):
-        blog = get_object_or_404(Blog, id=pk)
-        serializer = BlogSerializer(blog)
-        return Response(serializer.data)
+        if pk or pk == 0:
+            blog = get_object_or_404(Blog, id=pk)
+            serializer = BlogSerializer(blog)
+            return Response(serializer.data)
 
     def put(self, request, pk):
         blog = get_object_or_404(Blog, id=pk)
@@ -44,7 +51,7 @@ class BlogDetailAPIView(APIView):
     def delete(self, request, pk):
         blog = get_object_or_404(Blog, id=pk)
         blog.delete()
-        return Response({"success": "Blog deleted!"}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"success": "Blog deleted"}, status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET'])
