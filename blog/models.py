@@ -7,6 +7,8 @@ class Blog(models.Model):
     description = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="blogs",
+                               default=1)  # related_name - bu qayta ulanish
 
     def __str__(self):
         return self.title
